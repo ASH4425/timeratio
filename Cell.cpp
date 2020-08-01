@@ -259,8 +259,8 @@ void IdealDevice::Write(double deltaWeightNormalized, double weight, double minW
 /* Real Device */
 RealDevice::RealDevice(int x, int y) {
 	this->x = x; this->y = y;	// Cell location: x (column) and y (row) start from index 0
-	maxConductance = 3.8462e-8;		// Maximum cell conductance (S)
-	minConductance = 3.0769e-9;	// Minimum cell conductance (S)
+	maxConductance = 4.76e-6;		// Maximum cell conductance (S)
+	minConductance = 0.554e-6;	// Minimum cell conductance (S)
 	avgMaxConductance = maxConductance; // Average maximum cell conductance (S)
 	avgMinConductance = minConductance; // Average minimum cell conductance (S)
 	conductance = minConductance;	// Current conductance (S) (dynamic variable)
@@ -272,8 +272,8 @@ RealDevice::RealDevice(int x, int y) {
 	writePulseWidthLTP = 300e-6;	// Write pulse width (s) for LTP or weight increase
 	writePulseWidthLTD = 300e-6;	// Write pulse width (s) for LTD or weight decrease
 	writeEnergy = 0;	// Dynamic variable for calculation of write energy (J)
-	maxNumLevelLTP = 97;	// Maximum number of conductance states during LTP or weight increase
-	maxNumLevelLTD = 100;	// Maximum number of conductance states during LTD or weight decrease
+	maxNumLevelLTP = 56;	// Maximum number of conductance states during LTP or weight increase
+	maxNumLevelLTD = 64;	// Maximum number of conductance states during LTD or weight decrease
 	numPulse = 0;	// Number of write pulses used in the most recent write operation (dynamic variable)
 	cmosAccess = true;	// True: Pseudo-crossbar (1T1R), false: cross-point
     FeFET = false;		// True: FeFET structure (Pseudo-crossbar only, should be cmosAccess=1)
@@ -281,23 +281,28 @@ RealDevice::RealDevice(int x, int y) {
 	resistanceAccess = 15e3;	// The resistance of transistor (Ohm) in Pseudo-crossbar array when turned ON
 	nonlinearIV = false;	// Consider I-V nonlinearity or not (Currently for cross-point array only)
 	NL = 10;    // I-V nonlinearity in write scheme (the current ratio between Vw and Vw/2), assuming for the LTP side
+
+	//드리프트 효과를 위한 cell의 변수 생성 : AnalogNVM class에 생성함
+	
+
+
 	if (nonlinearIV) {  // Currently for cross-point array only
 		double Vr_exp = readVoltage;  // XXX: Modify this value to Vr in the reported measurement data (can be different than readVoltage)
 		// Calculation of conductance at on-chip Vr
 		maxConductance = NonlinearConductance(maxConductance, NL, writeVoltageLTP, Vr_exp, readVoltage);
 		minConductance = NonlinearConductance(minConductance, NL, writeVoltageLTP, Vr_exp, readVoltage);
 	}
-	nonlinearWrite = true;	// Consider weight update nonlinearity or not
-	nonIdenticalPulse = false;	// Use non-identical pulse scheme in weight update or not
+	nonlinearWrite = false;	// Consider weight update nonlinearity or not
+	nonIdenticalPulse = true;	// Use non-identical pulse scheme in weight update or not
 	if (nonIdenticalPulse) {
-		VinitLTP = 2.85;	// Initial write voltage for LTP or weight increase (V)
-		VstepLTP = 0.05;	// Write voltage step for LTP or weight increase (V)
-		VinitLTD = 2.1;		// Initial write voltage for LTD or weight decrease (V)
-		VstepLTD = 0.05; 	// Write voltage step for LTD or weight decrease (V)
-		PWinitLTP = 75e-9;	// Initial write pulse width for LTP or weight increase (s)
-		PWstepLTP = 5e-9;	// Write pulse width for LTP or weight increase (s)
-		PWinitLTD = 75e-9;	// Initial write pulse width for LTD or weight decrease (s)
-		PWstepLTD = 5e-9;	// Write pulse width for LTD or weight decrease (s)
+		VinitLTP = 1.00;	// Initial write voltage for LTP or weight increase (V)
+		VstepLTP = 0.0125;	// Write voltage step for LTP or weight increase (V)
+		VinitLTD = 5.7;		// Initial write voltage for LTD or weight decrease (V)
+		VstepLTD = 0.025; 	// Write voltage step for LTD or weight decrease (V)
+		PWinitLTP = 100e-9;	// Initial write pulse width for LTP or weight increase (s)
+		PWstepLTP = 0;	// Write pulse width for LTP or weight increase (s)
+		PWinitLTD = 100e-9;	// Initial write pulse width for LTD or weight decrease (s)
+		PWstepLTD = 0;	// Write pulse width for LTD or weight decrease (s)
 		writeVoltageSquareSum = 0;	// Sum of V^2 of non-identical pulses (dynamic variable)
 	}
 	readNoise = false;		// Consider read noise or not
@@ -308,15 +313,15 @@ RealDevice::RealDevice(int x, int y) {
 	localGen.seed(std::time(0));
 	
 	/* Device-to-device weight update variation */
-	NL_LTP = 2.4;	// LTP nonlinearity
-	NL_LTD = -4.88;	// LTD nonlinearity
+	NL_LTP = 0.0;	// LTP nonlinearity
+	NL_LTD = 0.0;	// LTD nonlinearity
 	sigmaDtoD = 0;	// Sigma of device-to-device weight update vairation in gaussian distribution
 	gaussian_dist2 = new std::normal_distribution<double>(0, sigmaDtoD);	// Set up mean and stddev for device-to-device weight update vairation
 	paramALTP = getParamA(NL_LTP + (*gaussian_dist2)(localGen)) * maxNumLevelLTP;	// Parameter A for LTP nonlinearity
 	paramALTD = getParamA(NL_LTD + (*gaussian_dist2)(localGen)) * maxNumLevelLTD;	// Parameter A for LTD nonlinearity
 
 	/* Cycle-to-cycle weight update variation */
-	sigmaCtoC = 0.035* (maxConductance - minConductance);	// Sigma of cycle-to-cycle weight update vairation: defined as the percentage of conductance range
+	sigmaCtoC = 0;//sigmaCtoC = 0.035* (maxConductance - minConductance);	// Sigma of cycle-to-cycle weight update vairation: defined as the percentage of conductance range
 	gaussian_dist3 = new std::normal_distribution<double>(0, sigmaCtoC);    // Set up mean and stddev for cycle-to-cycle weight update vairation
 
 	/* Conductance range variation */
@@ -344,6 +349,21 @@ RealDevice::RealDevice(int x, int y) {
 }
 
 double RealDevice::Read(double voltage) {	// Return read current (A)
+
+	//단순화된 드리프트 효과 (t를 t0의 배수로 표현)
+	double driftCoeff;
+	double driftCoeffDepend = 0.2;
+
+	if (conductance > 2e-06) {
+		driftCoeff = 0.0;
+	}
+	else {
+		driftCoeff = driftCoeffDepend * log(conductance / 0.5e-06) + 0.1;
+	}
+
+	conductance *= pow((1 / 2), driftCoeff);
+	
+
 	extern std::mt19937 gen;
 	if (nonlinearIV) {
 		// TODO: nonlinear read

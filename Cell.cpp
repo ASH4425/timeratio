@@ -448,6 +448,8 @@ void RealDevice::Write(double deltaWeightNormalized, double weight, double minWe
 	//단순화된 드리프트 효과 (t를 t0의 배수로 표현)
 	double driftCoeff;
 	double driftCoeffDepend = 0.2;
+	double r;
+	r = 10;
 
 	if (conductanceNew > 2e-06) {
 		driftCoeff = 0.0;
@@ -456,7 +458,7 @@ void RealDevice::Write(double deltaWeightNormalized, double weight, double minWe
 		driftCoeff = driftCoeffDepend * log(conductance / 0.5e-06) + 0.1;
 	}
 
-	conductanceNew *= pow((1 / 2), driftCoeff);
+	conductanceNew *= pow((1 / r), driftCoeff);
 }
 
 /* Measured device */

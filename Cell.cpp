@@ -349,19 +349,6 @@ RealDevice::RealDevice(int x, int y) {
 }
 
 double RealDevice::Read(double voltage) {	// Return read current (A)
-
-	//단순화된 드리프트 효과 (t를 t0의 배수로 표현)
-	double driftCoeff;
-	double driftCoeffDepend = 0.2;
-
-	if (conductance > 2e-06) {
-		driftCoeff = 0.0;
-	}
-	else {
-		driftCoeff = driftCoeffDepend * log(conductance / 0.5e-06) + 0.1;
-	}
-
-	conductance *= pow((1 / 2), driftCoeff);
 	
 
 	extern std::mt19937 gen;
@@ -457,6 +444,19 @@ void RealDevice::Write(double deltaWeightNormalized, double weight, double minWe
 	
 	conductancePrev = conductance;
 	conductance = conductanceNew;
+
+	//단순화된 드리프트 효과 (t를 t0의 배수로 표현)
+	double driftCoeff;
+	double driftCoeffDepend = 0.2;
+
+	if (conductanceNew > 2e-06) {
+		driftCoeff = 0.0;
+	}
+	else {
+		driftCoeff = driftCoeffDepend * log(conductance / 0.5e-06) + 0.1;
+	}
+
+	conductanceNew *= pow((1 / 2), driftCoeff);
 }
 
 /* Measured device */

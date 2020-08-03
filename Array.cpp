@@ -64,13 +64,14 @@ double Array::ReadCell(int x, int y, char* mode) {
 			totalWireResistance = (x + 1) * wireResistanceRow + (arrayRowSize - y) * wireResistanceCol;
 		}
 		double cellCurrent;
-		//cell[x][y]ÀÇ waitTime ÃøÁ¤¿Ï·á ½ÃÁ¡
-		static_cast<AnalogNVM*>(cell[x][y])->end = std::chrono::system_clock::now();
+		//cell[x][y]ì˜ waitTime ì¸¡ì •ì™„ë£Œ ì‹œì 
+		/*static_cast<AnalogNVM*>(cell[x][y])->end = std::chrono::system_clock::now();
 		std::chrono::duration<double> Elapsed = end - start;
 		static_cast<AnalogNVM*>(cell[x][y])->elapsed = Elapsed;
 		
-		//µå¸®ÇÁÆ® È¿°ú ¼ö½Ä Ç¥Çö
+		//ë“œë¦¬í”„íŠ¸ íš¨ê³¼ ìˆ˜ì‹ í‘œí˜„
 		static_cast<eNVM*>(cell[x][y])->conductance *= (1e-06 / static_cast<AnalogNVM*>(cell[x][y])->elapsed) ^ (driftCoeff);
+		*/
 
 		if (static_cast<eNVM*>(cell[x][y])->nonlinearIV) 
         {
@@ -181,8 +182,8 @@ void Array::WriteCell(int x, int y, double deltaWeight, double weight, double ma
 						bool regular /* False: ideal write, True: regular write considering device properties */) {
 	// TODO: include wire resistance
 
-	//cell[x][y]ÀÇ waitTime ÃøÁ¤ ½ÃÀÛ ½ÃÁ¡
-	static_cast<AnalogNVM*>(cell[x][y])->start = std::chrono::system_clock::now();
+	//cell[x][y]ì˜ waitTime ì¸¡ì • ì‹œì‘ ì‹œì 
+	/*static_cast<AnalogNVM*>(cell[x][y])->start = std::chrono::system_clock::now();*/
 
 	if (AnalogNVM *temp = dynamic_cast<AnalogNVM*>(**cell)) // Analog eNVM
     { 

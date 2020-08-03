@@ -133,9 +133,9 @@ public:
 	double PWstepLTD;   // Write pulse width for LTD or weight decrease (s)
 	double writeVoltageSquareSum;   // Sum of V^2 of non-identical pulses (for weight update energy calculation in subcircuits)
 	
-	auto start = std::chrono::system_clock::now();
-	auto end = std::chrono::system_clock::now();
-	double elapsed;
+	//auto start = std::chrono::system_clock::now();
+	//auto end = std::chrono::system_clock::now();
+	//double elapsed;
 
 
 	virtual double Read(double voltage) = 0;

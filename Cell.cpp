@@ -449,13 +449,13 @@ void RealDevice::Write(double deltaWeightNormalized, double weight, double minWe
 	double driftCoeff;
 	double driftCoeffDepend = 0.2;
 	double r;
-	r = 1e+9
+	r = 1e+9;
 
 	if (conductanceNew > 2e-06) {
 		driftCoeff = 0.0;
 	}
-	else {
-		driftCoeff = driftCoeffDepend * log(conductance / 0.5e-06) + 0.1;
+		else {
+			driftCoeff = driftCoeffDepend * log(conductance / 0.5e-06) + 0.1;
 	}
 
 	conductanceNew *= pow((1 / r), driftCoeff);

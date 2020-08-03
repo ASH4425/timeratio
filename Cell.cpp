@@ -282,7 +282,7 @@ RealDevice::RealDevice(int x, int y) {
 	nonlinearIV = false;	// Consider I-V nonlinearity or not (Currently for cross-point array only)
 	NL = 10;    // I-V nonlinearity in write scheme (the current ratio between Vw and Vw/2), assuming for the LTP side
 
-	//µå¸®ÇÁÆ® È¿°ú¸¦ À§ÇÑ cellÀÇ º¯¼ö »ý¼º : AnalogNVM class¿¡ »ý¼ºÇÔ
+	//ë“œë¦¬í”„íŠ¸ íš¨ê³¼ë¥¼ ìœ„í•œ cellì˜ ë³€ìˆ˜ ìƒì„± : AnalogNVM classì— ìƒì„±í•¨
 	
 
 
@@ -445,11 +445,11 @@ void RealDevice::Write(double deltaWeightNormalized, double weight, double minWe
 	conductancePrev = conductance;
 	conductance = conductanceNew;
 
-	//´Ü¼øÈ­µÈ µå¸®ÇÁÆ® È¿°ú (t¸¦ t0ÀÇ ¹è¼ö·Î Ç¥Çö)
+	//ë‹¨ìˆœí™”ëœ ë“œë¦¬í”„íŠ¸ íš¨ê³¼ (të¥¼ t0ì˜ ë°°ìˆ˜ë¡œ í‘œí˜„)
 	double driftCoeff;
 	double driftCoeffDepend = 0.2;
 	double r;
-	r = 10;
+	r = 1e+7;
 
 	if (conductanceNew > 2e-06) {
 		driftCoeff = 0.0;

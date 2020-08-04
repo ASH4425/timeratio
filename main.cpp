@@ -128,7 +128,7 @@ int main() {
 	srand(0);	// Pseudorandom number seed
 	
 	ofstream mywriteoutfile;
-	mywriteoutfile.open("3.csv");                                                                                                            
+	mywriteoutfile.open("2.csv");                                                                                                            
 	
 	for (int i=1; i<=param->totalNumEpochs/param->interNumEpochs; i++) {
         //cout << "Training Epoch : " << i << endl;

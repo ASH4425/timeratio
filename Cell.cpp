@@ -282,8 +282,24 @@ RealDevice::RealDevice(int x, int y) {
 	nonlinearIV = false;	// Consider I-V nonlinearity or not (Currently for cross-point array only)
 	NL = 10;    // I-V nonlinearity in write scheme (the current ratio between Vw and Vw/2), assuming for the LTP side
 
-	//드리프트 효과를 위한 cell의 변수 생성 : AnalogNVM class에 생성함
-	
+
+
+
+
+	//driftCoeff variation variables
+	double driftsigmaCtoC;
+	double driftsigmaDtoD;
+
+	//D2D variation
+	driftsigmaDtoD = 0.035;	// Sigma of device-to-device driftCoeffDepend(k) vairation in gaussian distribution
+	gaussian_dist6 = new std::normal_distribution<double>(0, driftsigmaDtoD);	// Set up mean and stddev for device-to-device weight update vairation
+
+
+	//C2C variation
+	driftsigmaCtoC = 0.0 * (maxdriftCoeff - mindriftCoeff);	// Sigma of cycle-to-cycle driftCoeff vairation: defined as the percentage of drftCoeff range
+	gaussian_dist7 = new std::normal_distribution<double>(0, driftsigmaCtoC);    // Set up mean and stddev for cycle-to-cycle weight update vairation
+
+
 
 
 	if (nonlinearIV) {  // Currently for cross-point array only
@@ -454,20 +470,8 @@ void RealDevice::Write(double deltaWeightNormalized, double weight, double minWe
 	double r;
 	r = 1e+04;
 
-	//variation variables
-	double driftsigmaCtoC;
-	double driftsigmaDtoD;
-	
+	driftCoeffDepend += (*gaussian_dist6)(localGen);// Absolute variation
 
-
-	//D2D variation
-	std::mt19937 localGen;	// It's OK not to use the external gen, since here the device-to-device vairation is a one-time deal
-	localGen.seed(std::time(0));
-
-	driftsigmaDtoD = 0.035;	// Sigma of device-to-device driftCoeffDepend(k) vairation in gaussian distribution
-	gaussian_dist2 = new std::normal_distribution<double>(0, driftsigmaDtoD);	// Set up mean and stddev for device-to-device weight update vairation
-	driftCoeffDepend += (*gaussian_dist2)(localGen);// Absolute variation
-	
 	if (conductance > 2e-06) {
 		driftCoeff = 0.0;
 	}
@@ -477,11 +481,7 @@ void RealDevice::Write(double deltaWeightNormalized, double weight, double minWe
 	
 	
 	//C2C variation
-	/*driftsigmaCtoC = 0.035 * (maxdriftCoeff - mindriftCoeff);	// Sigma of cycle-to-cycle driftCoeff vairation: defined as the percentage of drftCoeff range
-	gaussian_dist7 = new std::normal_distribution<double>(0, driftsigmaCtoC);    // Set up mean and stddev for cycle-to-cycle weight update vairation
-	extern std::mt19937 gen;
 	driftCoeff += (*gaussian_dist7)(gen);// Absolute variation
-	*/
 
 
 	if(driftCoeff < mindriftCoeff) driftCoeff = mindriftCoeff;

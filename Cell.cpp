@@ -478,11 +478,11 @@ void RealDevice::Write(double deltaWeightNormalized, double weight, double minWe
 	
 	
 	//C2C variation
-	driftsigmaCtoC = 0.035 * (maxdriftCoeff - mindriftCoeff);	// Sigma of cycle-to-cycle driftCoeff vairation: defined as the percentage of drftCoeff range
+	/*driftsigmaCtoC = 0.035 * (maxdriftCoeff - mindriftCoeff);	// Sigma of cycle-to-cycle driftCoeff vairation: defined as the percentage of drftCoeff range
 	gaussian_dist7 = new std::normal_distribution<double>(0, driftsigmaCtoC);    // Set up mean and stddev for cycle-to-cycle weight update vairation
 	extern std::mt19937 gen;
 	driftCoeff += (*gaussian_dist7)(gen);// Absolute variation
-	
+	*/
 
 
 	if(driftCoeff < mindriftCoeff) driftCoeff = mindriftCoeff;

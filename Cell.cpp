@@ -466,6 +466,9 @@ void RealDevice::Write(double deltaWeightNormalized, double weight, double minWe
 	//단순화된 드리프트 효과 (t를 t0의 배수로 표현)
 	double driftCoeff;
 	double driftCoeffDepend = 0.2;
+	double maxdriftCoeff = 0.1;
+	double mindriftCoeff = 0.0;
+	
 
 	double r;
 	r = 1e+04;

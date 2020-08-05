@@ -287,6 +287,8 @@ RealDevice::RealDevice(int x, int y) {
 
 
 	//driftCoeff variation variables
+	const double maxdriftCoeff = 0.1;
+	const double mindriftCoeff = 0.0;
 	double driftsigmaCtoC;
 	double driftsigmaDtoD;
 
@@ -463,12 +465,13 @@ void RealDevice::Write(double deltaWeightNormalized, double weight, double minWe
 
 	//단순화된 드리프트 효과 (t를 t0의 배수로 표현)
 	double driftCoeff;
-	const double maxdriftCoeff = 0.1;
-	const double mindriftCoeff = 0.0;
 	double driftCoeffDepend = 0.2;
 
 	double r;
 	r = 1e+04;
+	
+	std::mt19937 localGen;	// It's OK not to use the external gen, since here the device-to-device vairation is a one-time deal
+	localGen.seed(std::time(0));
 
 	driftCoeffDepend += (*gaussian_dist6)(localGen);// Absolute variation
 

@@ -465,8 +465,8 @@ void RealDevice::Write(double deltaWeightNormalized, double weight, double minWe
 	localGen.seed(std::time(0));
 
 	driftsigmaDtoD = 0.035;	// Sigma of device-to-device driftCoeffDepend(k) vairation in gaussian distribution
-	gaussian_dist6 = new std::normal_distribution<double>(0, driftsigmaDtoD);	// Set up mean and stddev for device-to-device weight update vairation
-	driftCoeffDepend += (*gaussian_dist6)(localGen);// Absolute variation
+	gaussian_dist2 = new std::normal_distribution<double>(0, driftsigmaDtoD);	// Set up mean and stddev for device-to-device weight update vairation
+	driftCoeffDepend += (*gaussian_dist2)(localGen);// Absolute variation
 	
 	if (conductance > 2e-06) {
 		driftCoeff = 0.0;

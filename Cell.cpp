@@ -447,19 +447,46 @@ void RealDevice::Write(double deltaWeightNormalized, double weight, double minWe
 
 	//단순화된 드리프트 효과 (t를 t0의 배수로 표현)
 	double driftCoeff;
+	const double maxdriftCoeff = 0.1;
+	const double mindriftCoeff = 0.0;
 	double driftCoeffDepend = 0.2;
+
 	double r;
 	r = 1e+04;
 
+	//variation variables
+	double driftsigmaCtoC;
+	double driftsigmaDtoD;
+	
+
+
+	//D2D variation
+	std::mt19937 localGen;	// It's OK not to use the external gen, since here the device-to-device vairation is a one-time deal
+	localGen.seed(std::time(0));
+
+	driftsigmaDtoD = 0.035;	// Sigma of device-to-device driftCoeffDepend(k) vairation in gaussian distribution
+	gaussian_dist6 = new std::normal_distribution<double>(0, driftsigmaDtoD);	// Set up mean and stddev for device-to-device weight update vairation
+	driftCoeffDepend += (*gaussian_dist6)(localGen));// Absolute variation
+	
+	
 	if (conductance > 2e-06) {
 		driftCoeff = 0.0;
 	}
-		else {
-			driftCoeff = driftCoeffDepend * log(0.5e-06 / conductance) + 0.1;
+	else {
+		driftCoeff = driftCoeffDepend * log(0.5e-06 / conductance) + 0.1;
 	}
 	
-	if(driftCoeff < 0.0) driftCoeff = 0.0;
-	if(driftCoeff > 0.1) driftCoeff = 0.1;
+	
+	//C2C variation
+	driftsigmaCtoC = 0.035 * (maxdriftCoeff - mindriftCoeff);	// Sigma of cycle-to-cycle driftCoeff vairation: defined as the percentage of drftCoeff range
+	gaussian_dist7 = new std::normal_distribution<double>(0, driftsigmaCtoC);    // Set up mean and stddev for cycle-to-cycle weight update vairation
+	extern std::mt19937 gen;
+	driftCoeff += (*gaussian_dist7)(gen);// Absolute variation
+	
+
+
+	if(driftCoeff < mindriftCoeff) driftCoeff = mindriftCoeff;
+	if(driftCoeff > maxdriftCoeff) driftCoeff = maxdriftCoeff;
 
 	conductance *= pow((1 / r), driftCoeff);
 }

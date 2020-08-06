@@ -42,7 +42,7 @@
 #include "formula.h"
 #include "Array.h"
 #include "Cell.h"
-
+#include <random>
 
 /* General eNVM */
 void AnalogNVM::WriteEnergyCalculation(double wireCapCol) {
@@ -298,8 +298,8 @@ RealDevice::RealDevice(int x, int y) {
 
 
 	//C2C variation
-	driftsigmaCtoC = 0.0 * 0.1;// Sigma of cycle-to-cycle driftCoeff vairation: defined as the percentage of drftCoeff range
-	gaussian_dist7 = new std::normal_distribution<double>(0, driftsigmaCtoC);    // Set up mean and stddev for cycle-to-cycle weight update vairation
+	driftsigmaCtoC = 0.035 * (maxdriftCoeff - mindriftCoeff);// Sigma of cycle-to-cycle driftCoeff vairation: defined as the percentage of drftCoeff range
+	//gaussian_dist7 = new std::normal_distribution<double>(0, driftsigmaCtoC);    // Set up mean and stddev for cycle-to-cycle weight update vairation
 
 
 
@@ -487,7 +487,10 @@ void RealDevice::Write(double deltaWeightNormalized, double weight, double minWe
 	}
 	
 	//C2C variation
-	driftCoeff += (*gaussian_dist7)(gen);// Absolute variation
+	//driftCoeff += (*gaussian_dist7)(gen);// Absolute variation
+	std::default_random_engine generator;
+	std::normal_distribution<double> distribution(0, driftsigmaCtoC);
+	driftCoeff += distribution(generator)
 	
 
 	if(driftCoeff < mindriftCoeff) driftCoeff = mindriftCoeff;

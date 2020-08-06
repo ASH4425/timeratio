@@ -487,8 +487,8 @@ void RealDevice::Write(double deltaWeightNormalized, double weight, double minWe
 	
 	
 	//C2C variation
-	/*driftCoeff += (*gaussian_dist7)(gen);// Absolute variation
-	*/
+	driftCoeff += (*gaussian_dist7)(gen);// Absolute variation
+	
 
 	if(driftCoeff < mindriftCoeff) driftCoeff = mindriftCoeff;
 	if(driftCoeff > maxdriftCoeff) driftCoeff = maxdriftCoeff;

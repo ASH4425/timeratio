@@ -486,11 +486,8 @@ void RealDevice::Write(double deltaWeightNormalized, double weight, double minWe
 		driftCoeff = driftCoeffDepend * log(0.5e-06 / conductance) + 0.1;
 	}
 	
-	std::mt19937 localGen;
-	localGen.seed(std::time(0));
-	
 	//C2C variation
-	driftCoeff += (*gaussian_dist7)(localGen);// Absolute variation
+	driftCoeff += (*gaussian_dist7)(gen);// Absolute variation
 	
 
 	if(driftCoeff < mindriftCoeff) driftCoeff = mindriftCoeff;

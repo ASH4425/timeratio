@@ -293,12 +293,12 @@ RealDevice::RealDevice(int x, int y) {
 	double driftsigmaDtoD;
 
 	//D2D variation
-	driftsigmaDtoD = 0.035;	// Sigma of device-to-device driftCoeffDepend(k) vairation in gaussian distribution
+	driftsigmaDtoD = 0.0;	// Sigma of device-to-device driftCoeffDepend(k) vairation in gaussian distribution
 	gaussian_dist6 = new std::normal_distribution<double>(0, driftsigmaDtoD);	// Set up mean and stddev for device-to-device weight update vairation
 
 
 	//C2C variation
-	driftsigmaCtoC = 0.0 * (maxdriftCoeff - mindriftCoeff);	// Sigma of cycle-to-cycle driftCoeff vairation: defined as the percentage of drftCoeff range
+	driftsigmaCtoC = 0.035 * (maxdriftCoeff - mindriftCoeff);	// Sigma of cycle-to-cycle driftCoeff vairation: defined as the percentage of drftCoeff range
 	gaussian_dist7 = new std::normal_distribution<double>(0, driftsigmaCtoC);    // Set up mean and stddev for cycle-to-cycle weight update vairation
 
 

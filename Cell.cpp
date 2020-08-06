@@ -475,7 +475,7 @@ void RealDevice::Write(double deltaWeightNormalized, double weight, double minWe
 	
 	std::mt19937 localGen;	// It's OK not to use the external gen, since here the device-to-device vairation is a one-time deal
 	localGen.seed(std::time(0));
-
+	
 	driftCoeffDepend += (*gaussian_dist6)(localGen);// Absolute variation
 
 	if (conductance > 2e-06) {
@@ -485,6 +485,7 @@ void RealDevice::Write(double deltaWeightNormalized, double weight, double minWe
 		driftCoeff = driftCoeffDepend * log(0.5e-06 / conductance) + 0.1;
 	}
 	
+	extern std::mt19937 gen;
 	
 	//C2C variation
 	driftCoeff += (*gaussian_dist7)(gen);// Absolute variation

@@ -487,6 +487,7 @@ void RealDevice::Write(double deltaWeightNormalized, double weight, double minWe
 	}
 	
 	std::mt19937 localGen;
+	localGen.seed(std::time(0));
 	
 	//C2C variation
 	driftCoeff += (*gaussian_dist7)(localGen);// Absolute variation

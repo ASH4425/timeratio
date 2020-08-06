@@ -488,7 +488,7 @@ void RealDevice::Write(double deltaWeightNormalized, double weight, double minWe
 	
 	//C2C variation
 	//driftCoeff += (*gaussian_dist7)(gen);// Absolute variation
-	driftsigmaCtoC = 0.035 * (maxdriftCoeff - mindriftCoeff);
+	double driftsigmaCtoC = 0.035 * (maxdriftCoeff - mindriftCoeff);
 	std::default_random_engine generator;
 	std::normal_distribution<double> distribution(0, driftsigmaCtoC);
 	driftCoeff += distribution(generator);

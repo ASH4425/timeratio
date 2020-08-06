@@ -491,7 +491,7 @@ void RealDevice::Write(double deltaWeightNormalized, double weight, double minWe
 	driftsigmaCtoC = 0.035 * (maxdriftCoeff - mindriftCoeff);
 	std::default_random_engine generator;
 	std::normal_distribution<double> distribution(0, driftsigmaCtoC);
-	driftCoeff += distribution(generator)
+	driftCoeff += distribution(generator);
 	
 
 	if(driftCoeff < mindriftCoeff) driftCoeff = mindriftCoeff;

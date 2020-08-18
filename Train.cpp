@@ -46,7 +46,11 @@
 #include "Array.h"
 #include "Mapping.h"
 #include "NeuroSim.h"
+#include <string.h>
+#include <cmath>
 #include <fstream>
+
+using namespace std;
 
 extern Param *param;
 

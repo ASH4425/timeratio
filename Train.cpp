@@ -1043,7 +1043,7 @@ double s2[param->nOutput];  // Output delta from hidden layer to the output laye
 				for (int m = 0; m < param->nHide; m++) {
 					for (int i = 0; i < 4; i++) {
 						for (int n = 100 * i; n < 100 * (i + 1); n++) {
-							string filenameC = "weightIHwithoutDrift1";
+							string filenameC = "weightIHwithoutDriftRe";
 							std::ofstream readC;
 							readC.open(filenameC + ".csv", std::ios_base::app);
 							readC << endl;
@@ -1056,7 +1056,7 @@ double s2[param->nOutput];  // Output delta from hidden layer to the output laye
 				for (int m = 0; m < param->nOutput; m++) {
 					for (int i = 0; i < 4; i++) {
 						for (int n = 25 * i; n < 25 * (i + 1); n++) {
-							string filenameD = "weightHOwithoutDrift1";
+							string filenameD = "weightHOwithoutDriftRe";
 							std::ofstream readD;
 							readD.open(filenameD + ".csv", std::ios::out | std::ios_base::app);
 							readD << endl;

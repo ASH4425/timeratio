@@ -83,6 +83,8 @@ public:
 	double arrayWireWidth;	// Array wire width (nm)
 	int processNode;	// Technology node (nm)
 	double clkFreq;		// Clock frequency (Hz)
+	
+	int currentEpoch;
 };
 
 #endif

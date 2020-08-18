@@ -275,7 +275,7 @@ RealDevice::RealDevice(int x, int y) {
 	maxNumLevelLTP = 56;	// Maximum number of conductance states during LTP or weight increase
 	maxNumLevelLTD = 64;	// Maximum number of conductance states during LTD or weight decrease
 	numPulse = 0;	// Number of write pulses used in the most recent write operation (dynamic variable)
-	cmosAccess = true;	// True: Pseudo-crossbar (1T1R), false: cross-point
+	cmosAccess = false;	// True: Pseudo-crossbar (1T1R), false: cross-point
     FeFET = false;		// True: FeFET structure (Pseudo-crossbar only, should be cmosAccess=1)
 	gateCapFeFET = 2.1717e-18;	// Gate capacitance of FeFET (F)
 	resistanceAccess = 15e3;	// The resistance of transistor (Ohm) in Pseudo-crossbar array when turned ON
@@ -285,7 +285,7 @@ RealDevice::RealDevice(int x, int y) {
 
 
 
-
+	/*
 	//driftCoeff variation variables
 	const double maxdriftCoeff = 0.1;
 	const double mindriftCoeff = 0.0;
@@ -300,7 +300,7 @@ RealDevice::RealDevice(int x, int y) {
 	//C2C variation
 	driftsigmaCtoC = 0.035 * (maxdriftCoeff - mindriftCoeff);// Sigma of cycle-to-cycle driftCoeff vairation: defined as the percentage of drftCoeff range
 	//gaussian_dist7 = new std::normal_distribution<double>(0, driftsigmaCtoC);    // Set up mean and stddev for cycle-to-cycle weight update vairation
-
+	*/
 
 
 
@@ -463,6 +463,7 @@ void RealDevice::Write(double deltaWeightNormalized, double weight, double minWe
 	conductancePrev = conductance;
 	conductance = conductanceNew;
 
+	/*
 	//단순화된 드리프트 효과 (t를 t0의 배수로 표현)
 	double driftCoeff;
 	double driftCoeffDepend = 0.2;
@@ -498,6 +499,7 @@ void RealDevice::Write(double deltaWeightNormalized, double weight, double minWe
 	if(driftCoeff > maxdriftCoeff) driftCoeff = maxdriftCoeff;
 
 	conductance *= pow((1 / r), driftCoeff);
+	*/
 }
 
 /* Measured device */
